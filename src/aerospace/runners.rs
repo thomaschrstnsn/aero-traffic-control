@@ -5,8 +5,9 @@ use serde::de::DeserializeOwned;
 use crate::aerospace::Error;
 
 use super::Result;
-pub fn run_aerospace(args: &[&str]) -> Result<Vec<u8>> {
-    let output = Command::new("aerospace").args(args).output()?;
+
+pub fn run_any(command: &str, args: &[&str]) -> Result<Vec<u8>> {
+    let output = Command::new(command).args(args).output()?;
 
     if output.status.success() {
         Ok(output.stdout)
@@ -16,6 +17,10 @@ pub fn run_aerospace(args: &[&str]) -> Result<Vec<u8>> {
             std_err: String::from_utf8(output.stderr)?,
         })
     }
+}
+
+pub fn run_aerospace(args: &[&str]) -> Result<Vec<u8>> {
+    run_any("aerospace", args)
 }
 
 pub fn run_aerospace_json<T>(args: &[&str]) -> Result<T>

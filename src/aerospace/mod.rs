@@ -11,7 +11,8 @@ pub struct Aerospace;
 
 impl Aerospace {
     pub fn list_windows() -> Result<Vec<ListedWindow>> {
-        let windows: Vec<ListedWindow> = run_aerospace_json(&["list-windows", "--all"])?;
+        let args = ["list-windows", "--monitor", "all"];
+        let windows: Vec<ListedWindow> = run_aerospace_json(&args)?;
         Ok(windows)
     }
 
@@ -19,6 +20,22 @@ impl Aerospace {
         let windows: Vec<ListedWindow> = run_aerospace_json(&["list-windows", "--focused"])?;
         let window = windows.into_iter().next();
         Ok(window)
+    }
+
+    pub fn focus(focusable: &impl Focusable) -> Result<()> {
+        let args = [
+            "focus",
+            "--window-id",
+            &format!("{}", focusable.window_id()),
+        ];
+        let _ = run_aerospace(&args)?;
+        Ok(())
+    }
+
+    pub fn open_app<T: AsRef<str>>(app: &T) -> Result<()> {
+        let app = app.as_ref();
+        run_any("open", &["-a", app])?;
+        Ok(())
     }
 }
 
