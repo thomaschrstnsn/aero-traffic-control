@@ -17,10 +17,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         other_app_windows.sort();
 
-        let focused = Aerospace::focused_window()?;
+        let focused = Aerospace::focused_window();
         info!(?focused, "focused");
 
-        if let Some(focused) = focused
+        if let Ok(Some(focused)) = focused
             && focused.matches_app_name(&app)
         {
             info!(
