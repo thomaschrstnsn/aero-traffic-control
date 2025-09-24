@@ -5,6 +5,7 @@ use serde::Deserialize;
 pub struct ListedWindow {
     app_name: String,
     window_id: usize,
+    #[allow(dead_code)]
     window_title: String,
 }
 
@@ -31,11 +32,7 @@ impl Ord for ListedWindow {
 impl ListedWindow {
     pub fn matches_app_name<T: AsRef<str>>(&self, app: &T) -> bool {
         let app = app.as_ref();
-        self.app_name == app
-    }
-
-    pub fn window_id(&self) -> usize {
-        self.window_id
+        self.app_name.to_lowercase() == app.to_lowercase()
     }
 }
 
