@@ -5,7 +5,7 @@ use serde::Deserialize;
 pub struct ListedWindow {
     app_name: String,
     window_id: usize,
-    window_title: String,
+    _window_title: String,
 }
 
 impl Eq for ListedWindow {}
@@ -32,10 +32,6 @@ impl ListedWindow {
     pub fn matches_app_name<T: AsRef<str>>(&self, app: &T) -> bool {
         let app = app.as_ref();
         self.app_name == app
-    }
-
-    pub fn window_id(&self) -> usize {
-        self.window_id
     }
 }
 
