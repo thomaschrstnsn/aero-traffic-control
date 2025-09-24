@@ -39,6 +39,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Ok(());
         }
 
+        if !other_app_windows.is_empty() {
+            info!("app is already open, picking first window");
+            // cycle to next
+            let next = other_app_windows.first().unwrap();
+
+            info!(?next, "focusing window");
+
+            Aerospace::focus(next)?;
+            return Ok(());
+        }
+
         info!("app is not focused");
 
         if let Some(next) = other_app_windows.first() {
