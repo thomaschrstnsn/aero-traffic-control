@@ -1,10 +1,11 @@
 [package]
 name = "aero-traffic-control"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2024"
 
 [dependencies]
 thiserror = "2"
+clap = { version = "4", features = ["derive"] }
 serde_json = "1"
 serde = { version = "1", features = ["derive"] }
 tracing = "0.1"
