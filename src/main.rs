@@ -8,8 +8,11 @@ mod aerospace;
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
-    /// app_bundle_id to switch to (and possibly open if not running)
-    app: String,
+    /// app_bundle_id to switch to
+    app_bundle_id: String,
+
+    /// App to open (if configured, defaults to `app_bundle_id.app`)
+    app_to_open: Option<String>,
 
     /// do not open, only switch
     #[arg(short, long)]
@@ -21,11 +24,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let args = Args::parse();
 
-    let app = args.app;
+    info!(?args.app_bundle_id, "switching/opening app");
+
+    let all_windows = Aerospace::list_windows()?;
+    info!(?all_windows, "everything");
 
     let mut other_app_windows: Vec<_> = Aerospace::list_windows()?
         .into_iter()
-        .filter(|w| w.matches_app_name(&app))
+        .filter(|w| w.matches_app_name(&args.app_bundle_id))
         .collect();
 
     other_app_windows.sort();
@@ -34,7 +40,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     info!(?focused, "focused");
 
     if let Ok(Some(focused)) = focused
-        && focused.matches_app_name(&app)
+        && focused.matches_app_name(&args.app_bundle_id)
     {
         info!(
             ?focused,
@@ -72,7 +78,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         info!("app is not running, but we are told not to open it - doing nothing")
     } else {
         info!("app is not running, opening");
-        Aerospace::open_app(&app)?;
+        let app_to_open = args.app_to_open.unwrap_or(args.app_bundle_id);
+        Aerospace::open_app(&app_to_open)?;
     }
 
     Ok(())
