@@ -11,7 +11,7 @@ struct Args {
     /// app_bundle_id to switch to
     app_bundle_id: String,
 
-    /// App to open (if configured, defaults to `app_bundle_id.app`)
+    /// App to open (if configured), defaults to app_bundle_id
     app_to_open: Option<String>,
 
     /// do not open, only switch
@@ -25,9 +25,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
 
     info!(?args.app_bundle_id, "switching/opening app");
-
-    let all_windows = Aerospace::list_windows()?;
-    info!(?all_windows, "everything");
 
     let mut other_app_windows: Vec<_> = Aerospace::list_windows()?
         .into_iter()
